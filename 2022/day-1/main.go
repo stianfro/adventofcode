@@ -1,52 +1,40 @@
 package main
 
-import "sort"
+import (
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 type Elf struct {
 	Calories []int
 }
 
 func main() {
-	elf1 := Elf{
-		Calories: []int{
-			1000,
-			2000,
-			3000,
-		},
-	}
-	elf2 := Elf{
-		Calories: []int{
-			4000,
-		},
-	}
-	elf3 := Elf{
-		Calories: []int{
-			5000,
-			6000,
-		},
-	}
-	elf4 := Elf{
-		Calories: []int{
-			7000,
-			8000,
-			9000,
-		},
-	}
-	elf5 := Elf{
-		Calories: []int{
-			10000,
-		},
-	}
-
-	elves := []Elf{
-		elf1,
-		elf2,
-		elf3,
-		elf4,
-		elf5,
-	}
-
+	var elves []Elf
 	var totalCalories []int
+
+	input, err := os.ReadFile("input.txt")
+	if err != nil {
+		println("failed to read input")
+	}
+
+	data := strings.Split(string(input), "\n")
+
+	var foodSlice []int
+
+	for _, food := range data {
+		if food == "" {
+			elf := Elf{Calories: foodSlice}
+			elves = append(elves, elf)
+
+			foodSlice = []int{}
+			continue
+		}
+		foodValue, _ := strconv.Atoi(food)
+		foodSlice = append(foodSlice, foodValue)
+	}
 
 	for _, elf := range elves {
 		sumCalories := 0
