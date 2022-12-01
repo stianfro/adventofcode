@@ -48,5 +48,11 @@ func main() {
 
 	sort.Ints(totalCalories)
 
-	println(totalCalories[len(totalCalories)-1])
+	finalSum := 0
+
+	for i := 1; i <= 3; i++ {
+		finalSum += totalCalories[len(totalCalories)-i]
+	}
+
+	println(finalSum)
 }
