@@ -6,7 +6,8 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${fileDirname}",
+      "program": "${file}",
+      "cwd": "${fileDirname}",
       "hideSystemGoroutines": true,
     }
   ]
