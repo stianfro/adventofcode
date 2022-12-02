@@ -18,66 +18,102 @@ import (
 // Draw = 3
 // Won  = 6
 
-var result string
+// X = Need to lose
+// Y = Need to draw
+// Z = Need to win
+
 var score int
 
-func rockPaperScissors(opponent string, player string) (result string, score int) {
+func rockPaperScissors(opponent string, player string) (score int) {
 	switch opponent {
 	case "A":
 		switch player {
 		case "X":
 			// Draw
 			score = 3 + 1
-			result = "Draw"
 		case "Y":
 			// Win
 			score = 6 + 2
-			result = "Player wins, opponent loses"
 		case "Z":
 			// Lose
 			score = 0 + 3
-			result = "Player loses, opponent wins"
 		}
 	case "B":
 		switch player {
 		case "X":
 			// Lose
 			score = 0 + 1
-			result = "Player loses, opponent wins"
 		case "Y":
 			// Draw
 			score = 3 + 2
-			result = "Draw"
 		case "Z":
 			// Win
 			score = 6 + 3
-			result = "Player wins, opponent loses"
 		}
 	case "C":
 		switch player {
 		case "X":
 			// Win
 			score = 6 + 1
-			result = "Player wins, opponent loses"
 		case "Y":
 			// Lose
 			score = 0 + 2
-			result = "Player loses, opponent wins"
 		case "Z":
 			// Draw
 			score = 3 + 3
-			result = "Draw"
 		}
 	}
 
-	return result, score
+	return score
+}
+
+func rockPaperScissorsCorrect(opponent string, player string) (score int) {
+	switch player {
+	case "X": // If should lose
+		switch opponent {
+		case "A":
+			// Rock/Scissors
+			score = 0 + 3
+		case "B":
+			// Paper/Rock
+			score = 0 + 1
+		case "C":
+			// Scissors/Paper
+			score = 0 + 2
+		}
+	case "Y": // If should draw
+		switch opponent {
+		case "A":
+			// Rock/Rock
+			score = 3 + 1
+		case "B":
+			// Paper/Paper
+			score = 3 + 2
+		case "C":
+			// Scissors/Scissors
+			score = 3 + 3
+		}
+	case "Z": // If should win
+		switch opponent {
+		case "A":
+			// Rock/Paper
+			score = 6 + 2
+		case "B":
+			// Paper/Scissors
+			score = 6 + 3
+		case "C":
+			// Scissors/Rock
+			score = 6 + 1
+		}
+	}
+	return score
 }
 
 func main() {
-	totalScore := 0
+	var totalScore int
 	input := [][]string{}
 
-	inputBytes, err := os.ReadFile("input-example.txt")
+	inputBytes, err := os.ReadFile("input.txt")
 	if err != nil {
 		println("failed to read input")
 	}
@@ -90,12 +126,21 @@ func main() {
 		input = append(input, round)
 	}
 
+	fmt.Println("--- Part One ---")
+	totalScore = 0
 	for i := range input {
-		result, score = rockPaperScissors(input[i][0], input[i][1])
-		fmt.Println(result+". Score:", score)
-
+		score = rockPaperScissors(input[i][0], input[i][1])
 		totalScore += score
 	}
-
 	fmt.Println("Total score:", totalScore)
+	fmt.Println("")
+
+	fmt.Println("--- Part Two ---")
+	totalScore = 0
+	for i := range input {
+		score = rockPaperScissorsCorrect(input[i][0], input[i][1])
+		totalScore += score
+	}
+	fmt.Println("Correct total score:", totalScore)
+	fmt.Println("")
 }
