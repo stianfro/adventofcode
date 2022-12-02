@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strings"
 )
 
 // Rock > Scissors
@@ -73,11 +75,19 @@ func rockPaperScissors(opponent string, player string) (result string, score int
 
 func main() {
 	totalScore := 0
+	input := [][]string{}
 
-	input := [][]string{
-		{"A", "Y"},
-		{"B", "X"},
-		{"C", "Z"},
+	inputBytes, err := os.ReadFile("input-example.txt")
+	if err != nil {
+		println("failed to read input")
+	}
+
+	inputData := strings.Split(string(inputBytes), "\n")
+
+	for _, v := range inputData {
+		round := strings.Split(v, " ")
+
+		input = append(input, round)
 	}
 
 	for i := range input {
