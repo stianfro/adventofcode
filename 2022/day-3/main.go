@@ -29,16 +29,15 @@ func genAlphabet() []string {
 }
 
 func main() {
-	inputData := getInput("input-example.txt")
-	// priority := genAlphabet()
+	d := getInput("input-example.txt")
+	a := genAlphabet()
+	t := 0
 
-	for _, v := range inputData {
+	for _, v := range d {
 		r := strings.Split(v, "")
-		fmt.Println(r)
+
 		c1 := r[0 : len(r)-len(r)/2]
-		fmt.Println(c1)
 		c2 := r[len(r)-len(r)/2:]
-		fmt.Println(c2)
 
 		d := []string{}
 
@@ -54,6 +53,19 @@ func main() {
 			}
 		}
 
-		fmt.Println(d)
+		s := 0
+
+		for i, v := range a {
+			p := i + 1
+
+			if v == d[0] {
+				s += p
+			}
+		}
+
+		fmt.Println(s)
+
+		t += s
 	}
+	fmt.Println(t)
 }
