@@ -29,7 +29,7 @@ func genAlphabet() []string {
 }
 
 func main() {
-	d := getInput("input-example.txt")
+	d := getInput("input.txt")
 	a := genAlphabet()
 
 	fmt.Println("--- Part One ---")
@@ -74,9 +74,7 @@ func main() {
 	fmt.Println("--- Part Two ---")
 	x := 0
 	g := []string{}
-	// b := []string{}
 	G := [][]string{}
-	// B := [][]string{}
 
 	for _, v := range d {
 		x += 1
@@ -90,25 +88,47 @@ func main() {
 		}
 	}
 
-	for _, g := range G {
-		// g = [vJrwpWtwJgWrhcsFMMfFFhFp jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL PmmdzqPrVvPwwTWBwg]
+	i := []string{}
 
+	for _, g := range G {
 		r1 := strings.Split(g[0], "")
 		r2 := strings.Split(g[1], "")
 		r3 := strings.Split(g[2], "")
 
-		for _, x := range r1 {
-			for _, y := range r2 {
-				if x == y {
-					for _, z := range r3 {
-						if y == z {
-							fmt.Println(x)
+		for _, a := range r1 {
+			for _, b := range r2 {
+				if a == b {
+					for _, c := range r3 {
+						if b == c {
+							x += 1
 							break
 						}
 					}
 					break
 				}
 			}
+			if x > 0 {
+				x = 0
+				i = append(i, a)
+				break
+			}
 		}
 	}
+
+	t = 0
+
+	for _, x := range i {
+		s := 0
+
+		for idx, y := range a {
+			p := idx + 1
+
+			if y == x {
+				s += p
+			}
+		}
+		t += s
+	}
+
+	fmt.Println(t)
 }
