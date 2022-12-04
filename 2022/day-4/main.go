@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strconv"
 	"strings"
 )
@@ -34,31 +33,26 @@ func main() {
 
 func partOne() {
 	answer := 0
-	pairRg := [][]int{}
+	pairRgAll := [][][]int{}
 
-	for _, pair := range getInput("input.txt") {
+	for _, pair := range getInput("input-example.txt") {
+		pairRg := [][]int{}
 		for _, sect := range strings.Split(pair, ",") {
 			sectId := strings.Split(sect, "-")
 			sectRg := makeRange(sectId[0], sectId[1])
 			pairRg = append(pairRg, sectRg)
 		}
+		pairRgAll = append(pairRgAll, pairRg)
 	}
 
-	for a, x := range pairRg {
-		if a%2 != 0 {
-			continue
-		}
-		for _, y := range x {
-			for b, z := range pairRg[a+1] {
-				if y == z {
-					if b+1 == len(pairRg[a+1]) {
-						answer += 1
-						if reflect.DeepEqual(pairRg[a], pairRg[a+1]) {
-							answer += 1
-						}
-					}
-				} else {
-					continue
+	for _, pair := range pairRgAll {
+		assignmentsA := pair[0]
+		assignmentsB := pair[1]
+
+		for _, sectionA := range assignmentsA {
+			for _, sectionB := range assignmentsB {
+				if sectionA == sectionB {
+					fmt.Println(sectionA, sectionB)
 				}
 			}
 		}
