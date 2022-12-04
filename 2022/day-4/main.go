@@ -28,11 +28,8 @@ func makeRange(min, max string) []int {
 }
 
 func main() {
-	partOne()
-}
-
-func partOne() {
 	p1 := 0
+	p2 := 0
 
 	for _, line := range getInput("input.txt") {
 		a := strings.Split(line, ",")
@@ -41,36 +38,22 @@ func partOne() {
 		b := strings.Split(one, "-")
 		c := strings.Split(two, "-")
 
-		s1, e1 := b[0], b[1]
-		s2, e2 := c[0], c[1]
+		s1s, e1s := b[0], b[1]
+		s2s, e2s := c[0], c[1]
 
-		s1i, _ := strconv.Atoi(s1)
-		e1i, _ := strconv.Atoi(e1)
-		s2i, _ := strconv.Atoi(s2)
-		e2i, _ := strconv.Atoi(e2)
+		s1, _ := strconv.Atoi(s1s)
+		e1, _ := strconv.Atoi(e1s)
+		s2, _ := strconv.Atoi(s2s)
+		e2, _ := strconv.Atoi(e2s)
 
-		if s1i <= s2i && e2i <= e1i || s2i <= s1i && e1i <= e2i {
+		if s1 <= s2 && e2 <= e1 || s2 <= s1 && e1 <= e2 {
 			p1 += 1
+		}
+		if !(e1 < s2 || s1 > e2) {
+			p2 += 1
 		}
 	}
 
 	fmt.Println(p1)
+	fmt.Println(p2)
 }
-
-// Guesses
-// 491 (too low)
-// 982 (too high)
-// 494 (too low)
-// 497
-// 757
-// 760
-
-// 1.. 1-1
-// 123 1-3
-// PROBLEM HERE
-
-// answer = 3
-
-// 1-3,1-1
-// 1-1,1-3
-// 1-3,1-3
