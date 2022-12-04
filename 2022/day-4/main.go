@@ -27,45 +27,34 @@ func makeRange(min, max string) []int {
 	return a
 }
 
-func Intersection(a, b []int) (c []int) {
-	m := make(map[int]bool)
-
-	for _, item := range a {
-		m[item] = true
-	}
-
-	for _, item := range b {
-		if _, ok := m[item]; ok {
-			c = append(c, item)
-		}
-	}
-	return
-}
-
 func main() {
 	partOne()
 }
 
 func partOne() {
-	pairRgAll := [][][]int{}
+	p1 := 0
 
-	for _, pair := range getInput("input-example.txt") {
-		pairRg := [][]int{}
-		for _, sect := range strings.Split(pair, ",") {
-			sectId := strings.Split(sect, "-")
-			sectRg := makeRange(sectId[0], sectId[1])
-			pairRg = append(pairRg, sectRg)
+	for _, line := range getInput("input.txt") {
+		a := strings.Split(line, ",")
+		one, two := a[0], a[1]
+
+		b := strings.Split(one, "-")
+		c := strings.Split(two, "-")
+
+		s1, e1 := b[0], b[1]
+		s2, e2 := c[0], c[1]
+
+		s1i, _ := strconv.Atoi(s1)
+		e1i, _ := strconv.Atoi(e1)
+		s2i, _ := strconv.Atoi(s2)
+		e2i, _ := strconv.Atoi(e2)
+
+		if s1i <= s2i && e2i <= e1i || s2i <= s1i && e1i <= e2i {
+			p1 += 1
 		}
-		pairRgAll = append(pairRgAll, pairRg)
 	}
 
-	for _, a := range pairRgAll {
-		overlap := Intersection(a[0], a[1])
-
-		if len(overlap) < len(a[0]) || len(overlap) < len(a[1]) {
-			fmt.Println(overlap)
-		}
-	}
+	fmt.Println(p1)
 }
 
 // Guesses
