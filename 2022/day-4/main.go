@@ -50,9 +50,15 @@ func partOne() {
 		assignmentsB := pair[1]
 
 		for _, sectionA := range assignmentsA {
-			for _, sectionB := range assignmentsB {
+			//   sectionA = 3
+			//   assignmentsA = [2,3,4,5,6,7,8] (7)
+			for idx, sectionB := range assignmentsB {
+				// sectionB = 3
+				// assignmentsB =   [3,4,5,6,7] (5)
 				if sectionA == sectionB {
-					fmt.Println(sectionA, sectionB)
+					if idx+1 == len(assignmentsB) {
+						answer += 1
+					}
 				}
 			}
 		}
