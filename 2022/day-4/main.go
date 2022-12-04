@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strconv"
 	"strings"
 )
@@ -28,6 +27,21 @@ func makeRange(min, max string) []int {
 	return a
 }
 
+func Intersection(a, b []int) (c []int) {
+	m := make(map[int]bool)
+
+	for _, item := range a {
+		m[item] = true
+	}
+
+	for _, item := range b {
+		if _, ok := m[item]; ok {
+			c = append(c, item)
+		}
+	}
+	return
+}
+
 func main() {
 	partOne()
 }
@@ -35,7 +49,7 @@ func main() {
 func partOne() {
 	pairRgAll := [][][]int{}
 
-	for _, pair := range getInput("input.txt") {
+	for _, pair := range getInput("input-example.txt") {
 		pairRg := [][]int{}
 		for _, sect := range strings.Split(pair, ",") {
 			sectId := strings.Split(sect, "-")
@@ -45,50 +59,13 @@ func partOne() {
 		pairRgAll = append(pairRgAll, pairRg)
 	}
 
-	pairDupTot := [][][]int{}
+	for _, a := range pairRgAll {
+		overlap := Intersection(a[0], a[1])
 
-	for _, pair := range pairRgAll {
-		assignmentsA := pair[0]
-		assignmentsB := pair[1]
-
-		for _, sectionA := range assignmentsA {
-			for idx, sectionB := range assignmentsB {
-				if sectionA == sectionB {
-					if idx+1 == len(assignmentsB) {
-						pairDup := [][]int{assignmentsA, assignmentsB}
-						pairDupTot = append(pairDupTot, pairDup)
-					}
-				}
-			}
-		}
-
-		for _, sectionB := range assignmentsB {
-			for idx, sectionA := range assignmentsA {
-				if sectionB == sectionA {
-					if idx+1 == len(assignmentsA) && len(assignmentsA) < len(assignmentsB) {
-						pairDup := [][]int{assignmentsA, assignmentsB}
-						if len(pairDupTot) >= 1 {
-							if !reflect.DeepEqual(pairDupTot[len(pairDupTot)-1], pairDup) {
-								pairDupTot = append(pairDupTot, pairDup)
-							}
-						}
-					}
-				}
-			}
+		if len(overlap) < len(a[0]) || len(overlap) < len(a[1]) {
+			fmt.Println(overlap)
 		}
 	}
-
-	answer := 0
-
-	for _, dup := range pairDupTot {
-		fmt.Println(dup)
-		answer += 1
-		if reflect.DeepEqual(dup[0], dup[1]) {
-			answer += 1
-		}
-	}
-
-	fmt.Println(answer)
 }
 
 // Guesses
