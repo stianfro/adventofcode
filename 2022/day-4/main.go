@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -32,10 +33,9 @@ func main() {
 }
 
 func partOne() {
-	answer := 0
 	pairRgAll := [][][]int{}
 
-	for _, pair := range getInput("input-example.txt") {
+	for _, pair := range getInput("input.txt") {
 		pairRg := [][]int{}
 		for _, sect := range strings.Split(pair, ",") {
 			sectId := strings.Split(sect, "-")
@@ -45,22 +45,46 @@ func partOne() {
 		pairRgAll = append(pairRgAll, pairRg)
 	}
 
+	pairDupTot := [][][]int{}
+
 	for _, pair := range pairRgAll {
 		assignmentsA := pair[0]
 		assignmentsB := pair[1]
 
 		for _, sectionA := range assignmentsA {
-			//   sectionA = 3
-			//   assignmentsA = [2,3,4,5,6,7,8] (7)
 			for idx, sectionB := range assignmentsB {
-				// sectionB = 3
-				// assignmentsB =   [3,4,5,6,7] (5)
 				if sectionA == sectionB {
 					if idx+1 == len(assignmentsB) {
-						answer += 1
+						pairDup := [][]int{assignmentsA, assignmentsB}
+						pairDupTot = append(pairDupTot, pairDup)
 					}
 				}
 			}
+		}
+
+		for _, sectionB := range assignmentsB {
+			for idx, sectionA := range assignmentsA {
+				if sectionB == sectionA {
+					if idx+1 == len(assignmentsA) && len(assignmentsA) < len(assignmentsB) {
+						pairDup := [][]int{assignmentsA, assignmentsB}
+						if len(pairDupTot) >= 1 {
+							if !reflect.DeepEqual(pairDupTot[len(pairDupTot)-1], pairDup) {
+								pairDupTot = append(pairDupTot, pairDup)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	answer := 0
+
+	for _, dup := range pairDupTot {
+		fmt.Println(dup)
+		answer += 1
+		if reflect.DeepEqual(dup[0], dup[1]) {
+			answer += 1
 		}
 	}
 
@@ -72,3 +96,15 @@ func partOne() {
 // 982 (too high)
 // 494 (too low)
 // 497
+// 757
+// 760
+
+// 1.. 1-1
+// 123 1-3
+// PROBLEM HERE
+
+// answer = 3
+
+// 1-3,1-1
+// 1-1,1-3
+// 1-3,1-3
