@@ -32,14 +32,6 @@ func printStacksTop(stacks [][]string) string {
 	return top
 }
 
-func stackSum(stacks [][]string) int {
-	sum := 0
-	for _, v := range stacks {
-		sum += len(v)
-	}
-	return sum
-}
-
 func main() {
 	var I []string
 	var stacks [][]string
