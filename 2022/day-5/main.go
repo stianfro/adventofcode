@@ -25,52 +25,77 @@ func printStacks(stacks [][]string) {
 func printStacksTop(stacks [][]string) string {
 	top := ""
 	for _, v := range stacks {
-		top += v[len(v)-1]
+		if len(v) != 0 {
+			top += v[len(v)-1]
+		}
 	}
 	return top
 }
 
 func main() {
-	// stacks := [][]string{
-	// 	{"Z", "N"},
-	// 	{"M", "C", "D"},
-	// 	{"P"},
-	// }
+	var I []string
+	var stacks [][]string
 
-	stacks := [][]string{
-		{"S", "L", "W"},
-		{"J", "T", "N", "Q"},
-		{"S", "C", "H", "F", "J"},
-		{"T", "R", "M", "W", "N", "G", "B"},
-		{"T", "R", "L", "S", "D", "H", "Q", "B"},
-		{"M", "J", "B", "V", "F", "H", "R", "L"},
-		{"D", "W", "R", "N", "J", "M"},
-		{"B", "Z", "T", "F", "H", "N", "D", "J"},
-		{"H", "L", "Q", "N", "B", "F", "T"},
+	example := true
+
+	if example {
+		I = getInput("input-example.txt")
+		stacks = [][]string{
+			{"Z", "N"},
+			{"M", "C", "D"},
+			{"P"},
+		}
+	} else {
+		I = getInput("input.txt")
+		stacks = [][]string{
+			{"S", "L", "W"},
+			{"J", "T", "N", "Q"},
+			{"S", "C", "H", "F", "J"},
+			{"T", "R", "M", "W", "N", "G", "B"},
+			{"T", "R", "L", "S", "D", "H", "Q", "B"},
+			{"M", "J", "B", "V", "F", "H", "R", "L"},
+			{"D", "W", "R", "N", "J", "M"},
+			{"B", "Z", "T", "F", "H", "N", "D", "J"},
+			{"H", "L", "Q", "N", "B", "F", "T"},
+		}
 	}
 
-	fmt.Println("--- Part One ---")
 	printStacks(stacks)
 	fmt.Println("")
 
 	fmt.Println("Start moving crates:")
-	for _, i := range getInput("input.txt") {
+	for _, i := range I {
 		instruction := strings.Split(i, " ")
 
 		mov, _ := strconv.Atoi(instruction[1])
 		src, _ := strconv.Atoi(instruction[3])
 		dst, _ := strconv.Atoi(instruction[5])
 
+		src = src - 1
+		dst = dst - 1
+
 		fmt.Println(i)
 
+		toMove := mov // e.g 4
+
 		for i := 0; i < mov; i++ {
-			stacks[dst-1] = append(stacks[dst-1], stacks[src-1][len(stacks[src-1])-1])
-			stacks[src-1] = stacks[src-1][:len(stacks[src-1])-1]
+			if toMove >= 1 && toMove <= 3 {
+				for i := 0; i < toMove; i++ {
+					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-(toMove-i)])
+				}
+				stacks[src] = stacks[src][:len(stacks[src])-toMove]
+				toMove -= 3
+			} else {
+				if len(stacks[src]) != 0 {
+					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-1])
+					stacks[src] = stacks[src][:len(stacks[src])-1]
+				}
+			}
 		}
 		printStacks(stacks)
 		fmt.Println("")
 	}
 
-	p1 := printStacksTop(stacks)
-	fmt.Println(p1)
+	answer := printStacksTop(stacks)
+	fmt.Println(answer)
 }
