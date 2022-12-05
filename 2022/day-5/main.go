@@ -32,6 +32,14 @@ func printStacksTop(stacks [][]string) string {
 	return top
 }
 
+func stackSum(stacks [][]string) int {
+	sum := 0
+	for _, v := range stacks {
+		sum += len(v)
+	}
+	return sum
+}
+
 func main() {
 	var I []string
 	var stacks [][]string
@@ -79,27 +87,15 @@ func main() {
 		toMove := mov // e.g 4
 
 		for i := 0; i < mov; i++ {
-			if mov >= 2 && !(toMove <= 0) {
-				var x int
-				var y int
-				if toMove >= 3 {
-					x = 3
-					y = 3
-				} else {
-					x = toMove
-					y = toMove
-				}
+			if !(toMove <= 0) {
+				x := toMove
+				y := toMove
 				for i := 0; i < y; i++ {
 					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-x])
 					x -= 1
 				}
 				stacks[src] = stacks[src][:len(stacks[src])-y]
 				toMove -= y
-			} else if !(toMove <= 0) {
-				if len(stacks[src]) != 0 {
-					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-1])
-					stacks[src] = stacks[src][:len(stacks[src])-1]
-				}
 			}
 		}
 		printStacks(stacks)
@@ -109,5 +105,3 @@ func main() {
 	answer := printStacksTop(stacks)
 	fmt.Println(answer)
 }
-
-// DWBJLVMLZ
