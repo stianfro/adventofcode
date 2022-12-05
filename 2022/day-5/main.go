@@ -36,7 +36,7 @@ func main() {
 	var I []string
 	var stacks [][]string
 
-	example := true
+	example := false
 
 	if example {
 		I = getInput("input-example.txt")
@@ -79,13 +79,23 @@ func main() {
 		toMove := mov // e.g 4
 
 		for i := 0; i < mov; i++ {
-			if toMove >= 1 && toMove <= 3 {
-				for i := 0; i < toMove; i++ {
-					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-(toMove-i)])
+			if mov >= 2 && !(toMove <= 0) {
+				var x int
+				var y int
+				if toMove >= 3 {
+					x = 3
+					y = 3
+				} else {
+					x = toMove
+					y = toMove
 				}
-				stacks[src] = stacks[src][:len(stacks[src])-toMove]
-				toMove -= 3
-			} else {
+				for i := 0; i < y; i++ {
+					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-x])
+					x -= 1
+				}
+				stacks[src] = stacks[src][:len(stacks[src])-y]
+				toMove -= y
+			} else if !(toMove <= 0) {
 				if len(stacks[src]) != 0 {
 					stacks[dst] = append(stacks[dst], stacks[src][len(stacks[src])-1])
 					stacks[src] = stacks[src][:len(stacks[src])-1]
@@ -99,3 +109,5 @@ func main() {
 	answer := printStacksTop(stacks)
 	fmt.Println(answer)
 }
+
+// DWBJLVMLZ
