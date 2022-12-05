@@ -12,10 +12,12 @@ func printStacks(stacks [][]string) {
 	}
 }
 
-func printStacksTop(stacks [][]string) {
+func printStacksTop(stacks [][]string) string {
+	top := ""
 	for _, v := range stacks {
-		fmt.Println(v[len(v)-1])
+		top += v[len(v)-1]
 	}
+	return top
 }
 
 func main() {
@@ -51,9 +53,14 @@ func main() {
 		src, _ := strconv.Atoi(instruction[3])
 		dst, _ := strconv.Atoi(instruction[5])
 
-		fmt.Println(mov, src, dst)
+		for i := 0; i < mov; i++ {
+			fmt.Println("")
+			stacks[dst-1] = append(stacks[dst-1], stacks[src-1][len(stacks[src-1])-1])
+			stacks[src-1] = stacks[src-1][:len(stacks[src-1])-1]
+			printStacks(stacks)
+		}
 	}
 
-	printStacks(stacks)
-	printStacksTop(stacks)
+	p1 := printStacksTop(stacks)
+	fmt.Println(p1)
 }
