@@ -34,7 +34,6 @@ func main() {
 			continue
 		} else {
 			size, _ := strconv.Atoi(words[0])
-			// for i := range path {
 			for i := 1; i < len(path)+1; i++ {
 				p := strings.Join(path[:i], "/")
 				SZ[p] += size
