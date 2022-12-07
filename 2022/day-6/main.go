@@ -13,8 +13,6 @@ func findMarker(stream []string, start int, count int) bool {
 		c[i+1] = stream[start+i]
 	}
 
-	fmt.Println(c)
-
 	if c[1] != c[2] && c[1] != c[3] && c[1] != c[4] && c[1] != c[5] && c[1] != c[6] && c[1] != c[7] && c[1] != c[8] && c[1] != c[9] && c[1] != c[10] && c[1] != c[11] && c[1] != c[12] && c[1] != c[13] && c[1] != c[14] {
 		if c[2] != c[3] && c[2] != c[4] && c[2] != c[5] && c[2] != c[6] && c[2] != c[7] && c[2] != c[8] && c[2] != c[9] && c[2] != c[10] && c[2] != c[11] && c[2] != c[12] && c[2] != c[13] && c[2] != c[14] {
 			if c[3] != c[4] && c[3] != c[5] && c[3] != c[6] && c[3] != c[7] && c[3] != c[8] && c[3] != c[9] && c[3] != c[10] && c[3] != c[11] && c[3] != c[12] && c[3] != c[13] && c[3] != c[14] {
@@ -28,7 +26,7 @@ func findMarker(stream []string, start int, count int) bool {
 											if c[11] != c[12] && c[11] != c[13] && c[11] != c[14] {
 												if c[12] != c[13] && c[12] != c[14] {
 													if c[13] != c[14] {
-														fmt.Println(c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], c[10], c[11], c[12], c[13], c[14])
+														fmt.Println(c)
 														return true
 													}
 												}
