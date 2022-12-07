@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -16,51 +17,61 @@ func getInput(fileName string) []string {
 	return strings.Split(string(inputBytes), "\n")
 }
 
-type Filesystem struct {
-	Directories []Directory
-}
-
-type Directory struct {
-	Name  string
-	Level int
-	Size  int
-}
-
 func main() {
-	var dir []Directory
-	var lvl int
-	var cur int
-	var dirSize int
-
-	input := getInput("input-example.txt")
-
-	for _, v := range input {
-		output := strings.Split(v, " ")
-
-		if output[0] == "$" {
-			switch output[1] {
-			case "cd":
-				if output[2] == ".." {
-					dir[cur] = Directory{
-						Name:  "foo",
-						Level: lvl,
-						Size:  dirSize,
-					}
-					lvl -= 1
-				} else if output[2] != "/" {
-					cur += 1
-					lvl += 1
-				}
-			case "ls": // $ ls
-				continue
+	path := []string{}
+	SZ := make(map[string]int)
+	for _, v := range getInput("input.txt") {
+		words := strings.Split(v, " ")
+		if words[1] == "cd" {
+			if words[2] == ".." {
+				path = path[:len(path)-1]
+			} else {
+				path = append(path, words[2])
 			}
-		} else if output[0] == "dir" {
+		} else if words[1] == "ls" {
 			continue
-		} else { // files
-			size, _ := strconv.Atoi(output[0])
-			dirSize += size
+		} else if words[0] == "dir" {
+			continue
+		} else {
+			size, _ := strconv.Atoi(words[0])
+			// for i := range path {
+			for i := 1; i < len(path)+1; i++ {
+				p := strings.Join(path[:i], "/")
+				SZ[p] += size
+			}
 		}
 	}
 
-	fmt.Println(dir)
+	p1 := 0
+	p2 := 0
+
+	spaceTotal := 70000000
+	spaceNeeded := 30000000
+	spaceUsed := SZ["/"]
+	spaceAvailable := spaceTotal - spaceUsed
+	spaceMinimum := spaceNeeded - spaceAvailable
+
+	fmt.Println("Total:    ", spaceTotal)
+	fmt.Println("Needed:   ", spaceNeeded)
+	fmt.Println("Used:     ", spaceUsed)
+	fmt.Println("Available:", spaceAvailable)
+	fmt.Println("Minimum:  ", spaceMinimum)
+
+	candidates := []int{}
+
+	for _, v := range SZ {
+		if v >= spaceMinimum {
+			candidates = append(candidates, v)
+		}
+		if v <= 100000 {
+			p1 += v
+		}
+	}
+
+	sort.Ints(candidates)
+
+	p2 = candidates[0]
+
+	fmt.Println(p1)
+	fmt.Println(p2)
 }
