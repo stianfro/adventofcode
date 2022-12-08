@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -14,95 +15,75 @@ func getInput(fileName string) []string {
 	return strings.Split(string(inputBytes), "\n")
 }
 
+var visibleT, visibleB, visibleL, visibleR bool
+
+// for every tree (t) in every row, check if all trees until edge (e) is lower than t
+// if all tress are lower until edge, add 1 to visibleTrees
 func main() {
 	input := getInput("input-example.txt")
 
 	visibleTrees := 0
+	allRows := [][]string{}
 
-	for i := range input {
-		if i >= len(input)-2 {
-			break
+	for _, row := range input {
+		r := strings.Split(row, "")
+		allRows = append(allRows, r)
+	}
+
+	edgeT := 0
+	edgeB := len(allRows) - 1
+
+	for i, row := range allRows {
+		fmt.Println(allRows[i])
+
+		if i == edgeT {
+			visibleTrees++
+			continue
+		} else if i == edgeB {
+			visibleTrees++
+			continue
 		}
 
-		// Could (and should) make a map here and then loop over it below (with k, v)
+		edgeL := 0
+		edgeR := len(row) - 1
 
-		row := make(map[string][]string)
+		for i, tree := range row {
+			t, _ := strconv.Atoi(tree)
 
-		row["A"] = strings.Split(input[i], "")
-		row["B"] = strings.Split(input[i+1], "")
-		row["C"] = strings.Split(input[i+2], "")
+			if i == edgeL {
+				visibleTrees++
+				continue
+			} else if i == edgeR {
+				visibleTrees++
+				continue
+			}
 
-		for k := range row {
-			fmt.Println(k, row[k])
-		}
+			distanceToEdgeR := len(row) - i
+			distanceToEdgeL := i
 
-		for i := range row["A"] {
-			// Don't check left tree if i is the first element in row
-			if i != 0 {
-				// Check left tree
-				if row["A"][i-1] < row["A"][i] {
-					visibleTrees++
+			// l->r
+			for a := 0; a < distanceToEdgeR; a++ {
+				T, _ := strconv.Atoi(row[a])
+				if t > T {
+					fmt.Println(row[a])
 					break
-				}
-			} else if i != len(row["A"]) { // Don't check right tree if i is the last element in row
-				// Check right tree
-				if row["A"][i+1] < row["A"][i] {
-					visibleTrees++
-					break
-				}
-			} else {
-				// Check tree below
-				if row["A"][i] > row["B"][i] {
-					visibleTrees++
-					break
+				} else {
+					continue
 				}
 			}
-		}
-
-		for i := range row["B"] {
-			if i != 0 {
-				if row["B"][i-1] < row["B"][i] {
-					visibleTrees++
+			// l<-r
+			for b := distanceToEdgeL - 1; b >= 0; b-- {
+				T, _ := strconv.Atoi(row[b])
+				if t > T {
+					fmt.Println(row[b])
 					break
-				}
-			} else if i != len(row["B"]) {
-				if row["B"][i+1] < row["B"][i] {
-					visibleTrees++
-					break
-				}
-			} else {
-				// Check tree above
-				if row["B"][i] > row["A"][i] {
-					visibleTrees++
-					break
-				}
-				// Check tree below
-				if row["A"][i] > row["B"][i] {
-					visibleTrees++
-					break
-				}
-			}
-		}
-
-		for i := range row["C"] {
-			if i != 0 {
-				if row["C"][i-1] < row["C"][i] {
-					visibleTrees++
-					break
-				}
-			} else if i != len(row["C"]) {
-				if row["C"][i+1] < row["C"][i] {
-					visibleTrees++
-					break
-				}
-			} else {
-				if row["C"][i] > row["A"][i] {
-					visibleTrees++
-					break
+				} else {
+					continue
 				}
 			}
 		}
 	}
 
+	fmt.Println("")
 	fmt.Println(visibleTrees)
 }
