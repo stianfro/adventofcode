@@ -17,9 +17,7 @@ func getInput(fileName string) []string {
 func main() {
 	input := getInput("input-example.txt")
 
-	// 30373 rowA
-	// 25512 rowB
-	// 65332 rowC
+	visibleTrees := 0
 
 	for i := range input {
 		if i >= len(input)-2 {
@@ -28,60 +26,83 @@ func main() {
 
 		// Could (and should) make a map here and then loop over it below (with k, v)
 
-		rowA := strings.Split(input[i], "")
-		rowB := strings.Split(input[i+1], "")
-		rowC := strings.Split(input[i+2], "")
+		row := make(map[string][]string)
 
-		fmt.Println(rowA)
-		fmt.Println(rowB)
-		fmt.Println(rowC)
+		row["A"] = strings.Split(input[i], "")
+		row["B"] = strings.Split(input[i+1], "")
+		row["C"] = strings.Split(input[i+2], "")
 
-		visibleTrees := 0
+		for k := range row {
+			fmt.Println(k, row[k])
+		}
 
-		for i := range rowA {
+		for i := range row["A"] {
 			// Don't check left tree if i is the first element in row
 			if i != 0 {
 				// Check left tree
-				if rowA[i-1] < rowA[i] {
-					visibleTrees += 1
-					// isVisible = true
+				if row["A"][i-1] < row["A"][i] {
+					visibleTrees++
 					break
 				}
-			} else if i != len(rowA) { // Don't check right tree if i is the last element in row
+			} else if i != len(row["A"]) { // Don't check right tree if i is the last element in row
 				// Check right tree
-				if rowA[i+1] < rowA[i] {
-					visibleTrees += 1
+				if row["A"][i+1] < row["A"][i] {
+					visibleTrees++
 					break
 				}
 			} else {
 				// Check tree below
-				if rowA[i] > rowB[i] {
-					visibleTrees += 1
+				if row["A"][i] > row["B"][i] {
+					visibleTrees++
 					break
 				}
 			}
 		}
 
-		for i := range rowB {
+		for i := range row["B"] {
 			if i != 0 {
-				if rowB[i-1] < rowB[i] {
-					visibleTrees += 1
+				if row["B"][i-1] < row["B"][i] {
+					visibleTrees++
 					break
 				}
-			} else if i != len(rowB) {
-				if rowB[i+1] < rowB[i] {
-					visibleTrees += 1
+			} else if i != len(row["B"]) {
+				if row["B"][i+1] < row["B"][i] {
+					visibleTrees++
 					break
 				}
 			} else {
 				// Check tree above
-
+				if row["B"][i] > row["A"][i] {
+					visibleTrees++
+					break
+				}
 				// Check tree below
-				if rowA[i] > rowB[i] {
-					visibleTrees += 1
+				if row["A"][i] > row["B"][i] {
+					visibleTrees++
+					break
+				}
+			}
+		}
+
+		for i := range row["C"] {
+			if i != 0 {
+				if row["C"][i-1] < row["C"][i] {
+					visibleTrees++
+					break
+				}
+			} else if i != len(row["C"]) {
+				if row["C"][i+1] < row["C"][i] {
+					visibleTrees++
+					break
+				}
+			} else {
+				if row["C"][i] > row["A"][i] {
+					visibleTrees++
 					break
 				}
 			}
 		}
 	}
+
+	fmt.Println(visibleTrees)
 }
