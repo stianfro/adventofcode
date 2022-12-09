@@ -1,0 +1,14 @@
+x = 1
+y = 1
+
+R 4 // x += 4, 				x = 5
+U 4 // y += 4, y = 5
+L 3 // x -= 3, 				x = 2
+D 1 // y -= 1, y = 4
+R 4 // x += 4, 				x = 6
+D 1 // y -= 1, y = 3
+L 5 // x -= 5, 				x = 1
+R 2 // x += 2, 				x = 3
+
+xMax := xMotions[len(xMotions)-1]
+yMax := yMotions[len(yMotions)-1]

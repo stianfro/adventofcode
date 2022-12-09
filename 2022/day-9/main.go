@@ -19,9 +19,6 @@ import (
 // var headPosition Coordinate
 // var tailPosition Coordinate
 
-var xMotions []int
-var yMotions []int
-
 func getInput(fileName string) []string {
 	inputBytes, err := os.ReadFile(fileName)
 	if err != nil {
@@ -30,7 +27,8 @@ func getInput(fileName string) []string {
 	return strings.Split(string(inputBytes), "\n")
 }
 
-func generateGrid(motions []string) {
+func generateGrid(motions []string) (int, int) {
+	var xMotions, yMotions []int
 	x := 1
 	y := 1
 
@@ -59,18 +57,60 @@ func generateGrid(motions []string) {
 	sort.Ints(xMotions)
 	sort.Ints(yMotions)
 
-	xMax := xMotions[len(xMotions)-1]
-	yMax := yMotions[len(yMotions)-1]
+	return xMotions[len(xMotions)-1], yMotions[len(yMotions)-1]
+}
 
-	fmt.Println(xMax, yMax)
+func populateGrid(motions []string, xMax, yMax int) {
+	grid := [][]string{}
+
+	curPosX := 0 // 0 better?
+	curPosY := 0 // 0 better?
+
+	for _, v := range motions {
+		m := strings.Split(v, " ")
+
+		dir := m[0]
+		mov, _ := strconv.Atoi(m[1])
+
+		switch dir {
+		case "R":
+			curPosX += mov
+		case "L":
+			curPosX -= mov
+		case "U":
+			curPosY += mov
+		case "D":
+			curPosY -= mov
+		}
+
+		var row = make([]string, xMax)
+
+		// this must be inside a loop with the instructions
+		for y := 0; y < yMax; y++ { // might need to start on 0
+			if curPosY == y {
+				row[curPosX] = "H"
+				break
+			} else {
+				break
+			}
+		}
+		grid = append(grid, row)
+	}
+
+	for i := len(grid) - 1; i >= 0; i-- {
+		fmt.Println(grid[i])
+	}
 }
 
 func main() {
 	input := getInput("input-example.txt")
 
-	generateGrid(input)
+	xMax, yMax := generateGrid(input)
+	fmt.Println(xMax, yMax)
 
-	grid := [][]string{
+	populateGrid(input, xMax, yMax)
+
+	gridTest := [][]string{
 		{".", ".", ".", ".", ".", "."}, // grid[0]
 		{".", ".", ".", ".", ".", "."}, // grid[1]
 		{".", ".", ".", ".", ".", "."}, // grid[2]
@@ -78,7 +118,7 @@ func main() {
 		{"H", ".", ".", ".", ".", "."}, // grid[4]
 	}
 
-	for _, row := range grid {
-		fmt.Println(row)
+	for _, rowTest := range gridTest {
+		fmt.Println(rowTest)
 	}
 }
