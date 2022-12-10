@@ -1,14 +1,31 @@
 x = 1
 y = 1
 
-R 4 // x += 4, 				x = 5
-U 4 // y += 4, y = 5
-L 3 // x -= 3, 				x = 2
-D 1 // y -= 1, y = 4
-R 4 // x += 4, 				x = 6
-D 1 // y -= 1, y = 3
-L 5 // x -= 5, 				x = 1
-R 2 // x += 2, 				x = 3
+R 4 // x += 4, y = 1	x = 5
+U 4 // y += 4, y = 5  x = 5
+L 3 // x -= 3, y = 5	x = 2
+D 1 // y -= 1, y = 4  x = 2
+R 4 // x += 4, y = 4	x = 6
+D 1 // y -= 1, y = 3  x = 6
+L 5 // x -= 5, y = 3	x = 1
+R 2 // x += 2, y = 3	x = 3
 
 xMax := xMotions[len(xMotions)-1]
 yMax := yMotions[len(yMotions)-1]
+
+
+gridTest := [][]string{
+	{".", ".", ".", ".", ".", "."}, // grid[0]
+	{".", ".", ".", ".", ".", "."}, // grid[1]
+	{".", ".", ".", ".", ".", "."}, // grid[2]
+	{".", ".", ".", ".", ".", "."}, // grid[3]
+	{"H", ".", ".", ".", ".", "."}, // grid[4]
+}
+
+x := 0
+y := 4
+fmt.Println(gridTest[y][x])
+
+for _, rowTest := range gridTest {
+	fmt.Println(rowTest)
+}

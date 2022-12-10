@@ -8,18 +8,14 @@ import (
 	"strings"
 )
 
-// var xMax []int
-// var yMax []int
+type GridOptions struct {
+	xMotions []int
+	yMotions []int
+	xMax     int
+	yMax     int
+}
 
-// type Coordinate struct {
-// 		X int
-// 		Y int
-// }
-
-// var headPosition Coordinate
-// var tailPosition Coordinate
-
-func getInput(fileName string) []string {
+func Input(fileName string) []string {
 	inputBytes, err := os.ReadFile(fileName)
 	if err != nil {
 		println("failed to read input")
@@ -27,8 +23,9 @@ func getInput(fileName string) []string {
 	return strings.Split(string(inputBytes), "\n")
 }
 
-func generateGrid(motions []string) (int, int) {
+func Grid(motions []string) GridOptions {
 	var xMotions, yMotions []int
+
 	x := 1
 	y := 1
 
@@ -42,83 +39,71 @@ func generateGrid(motions []string) (int, int) {
 		case "R":
 			x += mov
 			xMotions = append(xMotions, x)
+			yMotions = append(yMotions, y)
 		case "L":
 			x -= mov
 			xMotions = append(xMotions, x)
+			yMotions = append(yMotions, y)
 		case "U":
 			y += mov
+			xMotions = append(xMotions, x)
 			yMotions = append(yMotions, y)
 		case "D":
 			y -= mov
+			xMotions = append(xMotions, x)
 			yMotions = append(yMotions, y)
 		}
 	}
 
-	sort.Ints(xMotions)
-	sort.Ints(yMotions)
+	sortedMotionsX := xMotions
+	sortedMotionsY := yMotions
 
-	return xMotions[len(xMotions)-1], yMotions[len(yMotions)-1]
+	sort.Ints(sortedMotionsX)
+	sort.Ints(sortedMotionsY)
+
+	options := GridOptions{
+		xMotions: xMotions,
+		yMotions: yMotions,
+		xMax:     sortedMotionsX[len(sortedMotionsX)-1],
+		yMax:     sortedMotionsY[len(sortedMotionsY)-1],
+	}
+
+	return options
 }
 
-func populateGrid(motions []string, xMax, yMax int) {
+func populateGrid(options GridOptions) {
 	grid := [][]string{}
 
 	curPosX := 0 // 0 better?
 	curPosY := 0 // 0 better?
 
-	for _, v := range motions {
-		m := strings.Split(v, " ")
+	// Something is not looping like I want it here
+	for i := 0; i < len(options.xMotions); i++ {
+		curPosX = options.xMotions[i] - 1
+		curPosY = options.yMotions[i] - 1
 
-		dir := m[0]
-		mov, _ := strconv.Atoi(m[1])
-
-		switch dir {
-		case "R":
-			curPosX += mov
-		case "L":
-			curPosX -= mov
-		case "U":
-			curPosY += mov
-		case "D":
-			curPosY -= mov
-		}
-
-		var row = make([]string, xMax)
+		row := make([]string, options.xMax)
 
 		// this must be inside a loop with the instructions
-		for y := 0; y < yMax; y++ { // might need to start on 0
+		for y := 0; y < options.yMax; y++ {
 			if curPosY == y {
 				row[curPosX] = "H"
 				break
 			} else {
+				row[curPosX] = "."
 				break
 			}
 		}
 		grid = append(grid, row)
 	}
-
 	for i := len(grid) - 1; i >= 0; i-- {
 		fmt.Println(grid[i])
 	}
 }
 
 func main() {
-	input := getInput("input-example.txt")
+	puzzleInput := Input("input-example.txt")
+	gridOptions := Grid(puzzleInput)
 
-	xMax, yMax := generateGrid(input)
-	fmt.Println(xMax, yMax)
-
-	populateGrid(input, xMax, yMax)
-
-	gridTest := [][]string{
-		{".", ".", ".", ".", ".", "."}, // grid[0]
-		{".", ".", ".", ".", ".", "."}, // grid[1]
-		{".", ".", ".", ".", ".", "."}, // grid[2]
-		{".", ".", ".", ".", ".", "."}, // grid[3]
-		{"H", ".", ".", ".", ".", "."}, // grid[4]
-	}
-
-	for _, rowTest := range gridTest {
-		fmt.Println(rowTest)
-	}
+	populateGrid(gridOptions)
 }
