@@ -71,8 +71,25 @@ func Grid(motions []string) GridOptions {
 	return options
 }
 
+func printGrid(grid [][]string) {
+	for i := len(grid) - 1; i >= 0; i-- {
+		fmt.Println(grid[i])
+	}
+}
+
 func populateGrid(options GridOptions) {
-	grid := [][]string{}
+	grid := make([][]string, options.yMax)
+
+	row := make([]string, options.xMax)
+	for i := 0; i < len(row); i++ {
+		row[i] = "."
+	}
+
+	for i := 0; i < len(grid); i++ {
+		grid[i] = row
+	}
+
+	printGrid(grid)
 
 	curPosX := 0 // 0 better?
 	curPosY := 0 // 0 better?
@@ -82,22 +99,9 @@ func populateGrid(options GridOptions) {
 		curPosX = options.xMotions[i] - 1
 		curPosY = options.yMotions[i] - 1
 
-		row := make([]string, options.xMax)
+		grid[curPosY][curPosX] = "H"
 
-		// this must be inside a loop with the instructions
-		for y := 0; y < options.yMax; y++ {
-			if curPosY == y {
-				row[curPosX] = "H"
-				break
-			} else {
-				row[curPosX] = "."
-				break
-			}
-		}
-		grid = append(grid, row)
-	}
-	for i := len(grid) - 1; i >= 0; i-- {
-		fmt.Println(grid[i])
+		printGrid(grid) // Something not quite right here
 	}
 }
 
