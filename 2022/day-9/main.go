@@ -1,23 +1,14 @@
+// Shameless copy of https://github.com/jonathanpaulson/AdventOfCode/blob/master/2022/9.py
+// After several attempts of trying to solve it on my own
 package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
-
-	"gonum.org/v1/plot"
-	"gonum.org/v1/plot/plotter"
-	"gonum.org/v1/plot/plotutil"
-	"gonum.org/v1/plot/vg"
 )
-
-type GridOptions struct {
-	xMotions []int
-	yMotions []int
-	xMax     int
-	yMax     int
-}
 
 func Input(fileName string) []string {
 	inputBytes, err := os.ReadFile(fileName)
@@ -27,119 +18,83 @@ func Input(fileName string) []string {
 	return strings.Split(string(inputBytes), "\n")
 }
 
-func Grid(motions []string) GridOptions {
-	var xMotions, yMotions []int
+func adjust(H, T []int) []int {
+	tail := []int{0, 0}
 
-	xMotions = append(xMotions, 1)
-	yMotions = append(yMotions, 1)
+	dr := H[0] - T[0]
+	dc := H[1] - T[1]
 
-	x := 1
-	y := 1
+	if math.Abs(float64(dr)) <= 1 && math.Abs(float64(dc)) <= 1 {
+		// pass
+	} else if math.Abs(float64(dr)) >= 2 && math.Abs(float64(dc)) >= 2 {
+		if T[0]-1 < H[0] {
+			tail[0] = H[0] - 1
+		} else {
+			tail[0] = H[0] + 1
+		}
 
-	for _, v := range motions {
-		m := strings.Split(v, " ")
+		if T[1] < H[1] {
+			tail[1] = H[1] - 1
+		} else {
+			tail[1] = H[1] + 1
+		}
+	} else if math.Abs(float64(dr)) >= 2 {
+		if T[0] < H[0] {
+			tail[0] = H[0] - 1
+		} else {
+			tail[0] = H[0] + 1
+		}
 
-		dir := m[0]
-		mov, _ := strconv.Atoi(m[1])
+		tail[1] = H[1]
+	} else if math.Abs(float64(dc)) >= 2 {
+		tail[0] = H[0]
 
-		switch dir {
-		case "R":
-			x += mov
-			xMotions = append(xMotions, x)
-			yMotions = append(yMotions, y)
-		case "L":
-			x -= mov
-			xMotions = append(xMotions, x)
-			yMotions = append(yMotions, y)
-		case "U":
-			y += mov
-			xMotions = append(xMotions, x)
-			yMotions = append(yMotions, y)
-		case "D":
-			y -= mov
-			xMotions = append(xMotions, x)
-			yMotions = append(yMotions, y)
+		if T[1] < H[1] {
+			tail[1] = H[1] - 1
+		} else {
+			tail[1] = H[1] + 1
 		}
 	}
 
-	_, xMax := MinMax(xMotions)
-	_, yMax := MinMax(yMotions)
-
-	options := GridOptions{
-		xMotions: xMotions,
-		yMotions: yMotions,
-		xMax:     xMax,
-		yMax:     yMax,
-	}
-
-	return options
-}
-
-func MinMax(array []int) (int, int) {
-	var max int = array[0]
-	var min int = array[0]
-	for _, value := range array {
-		if max < value {
-			max = value
-		}
-		if min > value {
-			min = value
-		}
-	}
-	return min, max
-}
-
-func printGrid(grid [][]string) {
-	for i := len(grid) - 1; i >= 0; i-- {
-		fmt.Println(grid[i])
-	}
-}
-
-func populateGrid(options GridOptions) {
-	var headPositionX, headPositionY float64
-	var tailPositionX, tailPositionY float64
-
-	p := plot.New()
-	p.Title.Text = "Rope Movement"
-	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Y"
-	p.Add(plotter.NewGrid())
-
-	headPoints := make(plotter.XYs, len(options.xMotions))
-	tailPoints := make(plotter.XYs, len(options.xMotions))
-
-	for i := 0; i < len(options.xMotions); i++ {
-		headPositionX = float64(options.xMotions[i] - 1)
-		headPositionY = float64(options.yMotions[i] - 1)
-
-		headPoints[i].X = headPositionX
-		headPoints[i].Y = headPositionY
-
-		if tailPositionX == headPositionX && tailPositionX+2 == headPositionY {
-			tailPositionX = headPositionX
-			tailPositionY = headPositionY - 1
-		}
-
-		tailPoints[i].X = tailPositionX
-		tailPoints[i].Y = tailPositionY
-	}
-
-	err := plotutil.AddLinePoints(p,
-		"Head", headPoints,
-		"Tail", tailPoints,
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
-		panic(err)
-	}
+	return tail
 }
 
 func main() {
 	puzzleInput := Input("input-example.txt")
-	gridOptions := Grid(puzzleInput)
 
-	populateGrid(gridOptions)
+	H := []int{0, 0}
+	T := [][]int{{0, 0}}
+
+	DR := map[string]int{
+		"L": 0,
+		"U": -1,
+		"R": 0,
+		"D": 1,
+	}
+	DC := map[string]int{
+		"L": -1,
+		"U": 0,
+		"R": 1,
+		"D": 0,
+	}
+	P1 := [][]int{{0, 0}}
+	// P2 := T[8]
+	for _, line := range puzzleInput {
+		motion := strings.Split(line, " ")
+
+		direction := motion[0]
+		amount, _ := strconv.Atoi(motion[1])
+
+		for i := 0; i < amount; i++ {
+			H = []int{H[0] + DR[direction], H[1] + DC[direction]}
+			T[0] = adjust(H, T[0])
+			for i := 1; i == 9; i++ {
+				T[i] = adjust(T[i-1], T[i])
+			}
+			P1 = append(P1, T[0])
+			fmt.Println(T[0])
+		}
+	}
+
+	fmt.Println(len(P1))
 }
