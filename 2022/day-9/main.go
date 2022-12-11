@@ -83,56 +83,24 @@ func printGrid(grid [][]string) {
 }
 
 func populateGrid(options GridOptions) {
-	grid := make([][]string, options.yMax)
-
-	row := make([]string, options.xMax)
-	for i := 0; i < len(row); i++ {
-		row[i] = "."
-	}
-
-	for i := 0; i < len(grid); i++ {
-		grid[i] = row
-	}
-
-	printGrid(grid)
-
-	curPosX := 0 // 0 better?
-	curPosY := 0 // 0 better?
-
-	// Something is not looping like I want it here
-	for i := 0; i < len(options.xMotions); i++ {
-		curPosX = options.xMotions[i] - 1
-		curPosY = options.yMotions[i] - 1
-
-		grid[curPosY][curPosX] = "H"
-
-		printGrid(grid) // Something not quite right here
-	}
-}
-
-func main() {
-	// puzzleInput := Input("input-example.txt")
-	// gridOptions := Grid(puzzleInput)
-
-	// populateGrid(gridOptions)
-
 	p := plot.New()
 	p.Title.Text = "Rope Movement"
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 
-	pts := make(plotter.XYs, 3)
-	pts[0].X = 0
-	pts[0].Y = 0
+	pts := make(plotter.XYs, len(options.xMotions))
 
-	pts[1].X = 4
-	pts[1].Y = 0
+	// Something is not looping like I want it here
+	for i := 0; i < len(options.xMotions); i++ {
+		positionX := float64(options.xMotions[i] - 1)
+		positionY := float64(options.yMotions[i] - 1)
 
-	pts[2].X = 4
-	pts[2].Y = 4
+		pts[i].X = positionX
+		pts[i].Y = positionY
+	}
 
 	err := plotutil.AddLinePoints(p,
-		"First", pts,
+		"Head", pts,
 	)
 	if err != nil {
 		panic(err)
@@ -141,4 +109,11 @@ func main() {
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
+}
+
+func main() {
+	puzzleInput := Input("input-example.txt")
+	gridOptions := Grid(puzzleInput)
+
+	populateGrid(gridOptions)
 }
