@@ -6,6 +6,11 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/plotutil"
+	"gonum.org/v1/plot/vg"
 )
 
 type GridOptions struct {
@@ -106,8 +111,34 @@ func populateGrid(options GridOptions) {
 }
 
 func main() {
-	puzzleInput := Input("input-example.txt")
-	gridOptions := Grid(puzzleInput)
+	// puzzleInput := Input("input-example.txt")
+	// gridOptions := Grid(puzzleInput)
 
-	populateGrid(gridOptions)
+	// populateGrid(gridOptions)
+
+	p := plot.New()
+	p.Title.Text = "Rope Movement"
+	p.X.Label.Text = "X"
+	p.Y.Label.Text = "Y"
+
+	pts := make(plotter.XYs, 3)
+	pts[0].X = 0
+	pts[0].Y = 0
+
+	pts[1].X = 4
+	pts[1].Y = 0
+
+	pts[2].X = 4
+	pts[2].Y = 4
+
+	err := plotutil.AddLinePoints(p,
+		"First", pts,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
+		panic(err)
+	}
 }
