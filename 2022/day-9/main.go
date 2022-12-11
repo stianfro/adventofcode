@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -30,6 +29,9 @@ func Input(fileName string) []string {
 
 func Grid(motions []string) GridOptions {
 	var xMotions, yMotions []int
+
+	xMotions = append(xMotions, 1)
+	yMotions = append(yMotions, 1)
 
 	x := 1
 	y := 1
@@ -60,20 +62,31 @@ func Grid(motions []string) GridOptions {
 		}
 	}
 
-	sortedMotionsX := xMotions
-	sortedMotionsY := yMotions
-
-	sort.Ints(sortedMotionsX)
-	sort.Ints(sortedMotionsY)
+	_, xMax := MinMax(xMotions)
+	_, yMax := MinMax(yMotions)
 
 	options := GridOptions{
 		xMotions: xMotions,
 		yMotions: yMotions,
-		xMax:     sortedMotionsX[len(sortedMotionsX)-1],
-		yMax:     sortedMotionsY[len(sortedMotionsY)-1],
+		xMax:     xMax,
+		yMax:     yMax,
 	}
 
 	return options
+}
+
+func MinMax(array []int) (int, int) {
+	var max int = array[0]
+	var min int = array[0]
+	for _, value := range array {
+		if max < value {
+			max = value
+		}
+		if min > value {
+			min = value
+		}
+	}
+	return min, max
 }
 
 func printGrid(grid [][]string) {
@@ -87,6 +100,7 @@ func populateGrid(options GridOptions) {
 	p.Title.Text = "Rope Movement"
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
+	p.Add(plotter.NewGrid())
 
 	pts := make(plotter.XYs, len(options.xMotions))
 
