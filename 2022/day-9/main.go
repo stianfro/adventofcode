@@ -96,25 +96,37 @@ func printGrid(grid [][]string) {
 }
 
 func populateGrid(options GridOptions) {
+	var headPositionX, headPositionY float64
+	var tailPositionX, tailPositionY float64
+
 	p := plot.New()
 	p.Title.Text = "Rope Movement"
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 	p.Add(plotter.NewGrid())
 
-	pts := make(plotter.XYs, len(options.xMotions))
+	headPoints := make(plotter.XYs, len(options.xMotions))
+	tailPoints := make(plotter.XYs, len(options.xMotions))
 
-	// Something is not looping like I want it here
 	for i := 0; i < len(options.xMotions); i++ {
-		positionX := float64(options.xMotions[i] - 1)
-		positionY := float64(options.yMotions[i] - 1)
+		headPositionX = float64(options.xMotions[i] - 1)
+		headPositionY = float64(options.yMotions[i] - 1)
 
-		pts[i].X = positionX
-		pts[i].Y = positionY
+		headPoints[i].X = headPositionX
+		headPoints[i].Y = headPositionY
+
+		if tailPositionX == headPositionX && tailPositionX+2 == headPositionY {
+			tailPositionX = headPositionX
+			tailPositionY = headPositionY - 1
+		}
+
+		tailPoints[i].X = tailPositionX
+		tailPoints[i].Y = tailPositionY
 	}
 
 	err := plotutil.AddLinePoints(p,
-		"Head", pts,
+		"Head", headPoints,
+		"Tail", tailPoints,
 	)
 	if err != nil {
 		panic(err)
