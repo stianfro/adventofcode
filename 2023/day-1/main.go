@@ -6,6 +6,18 @@ import (
 	"strings"
 )
 
+var letterDigits = []string{
+	"one",
+	"two",
+	"three",
+	"four",
+	"five",
+	"six",
+	"seven",
+	"eight",
+	"nine",
+}
+
 func main() {
 	var allDigits int
 
@@ -15,7 +27,9 @@ func main() {
 	for _, line := range calibrationDocument {
 		var digitSlice []string
 
-		data := strings.Split(line, "")
+		convertedLine := convertLetters(line)
+
+		data := strings.Split(convertedLine, "")
 		for _, character := range data {
 			if isDigit(character) {
 				digitSlice = append(digitSlice, character)
@@ -44,4 +58,40 @@ func isDigit(s string) bool {
 		return false
 	}
 	return true
+}
+
+func letterDigit(s string) string {
+	switch s {
+	case "one":
+		return "o1e"
+	case "two":
+		return "t2o"
+	case "three":
+		return "th3ee"
+	case "four":
+		return "fo4r"
+	case "five":
+		return "fi5e"
+	case "six":
+		return "s6x"
+	case "seven":
+		return "se7en"
+	case "eight":
+		return "ei8ht"
+	case "nine":
+		return "ni9e"
+	}
+
+	return ""
+}
+
+func convertLetters(s string) string {
+	for _, letter := range letterDigits {
+		if strings.Contains(s, letter) {
+			digit := letterDigit(letter)
+			s = strings.ReplaceAll(s, letter, digit)
+		}
+	}
+
+	return s
 }
