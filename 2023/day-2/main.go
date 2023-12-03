@@ -24,9 +24,7 @@ const (
 )
 
 func main() {
-	var possibleGames []Game
-	var sumIDs int
-
+	var totalPower int
 	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n")
 
@@ -44,15 +42,10 @@ func main() {
 			game.Sets = append(game.Sets, setParsed)
 		}
 
-		if possible(game) {
-			possibleGames = append(possibleGames, game)
-		}
+		totalPower += calculatePower(game)
 	}
 
-	for _, game := range possibleGames {
-		sumIDs += game.ID
-	}
-	println(sumIDs)
+	println(totalPower)
 }
 
 func parseSet(s string) Set {
@@ -90,4 +83,26 @@ func possible(g Game) bool {
 	}
 
 	return true
+}
+
+func calculatePower(g Game) int {
+	var redMinimum int
+	var greenMinimum int
+	var blueMinimum int
+
+	for _, set := range g.Sets {
+		if set.Red > redMinimum {
+			redMinimum = set.Red
+		}
+		if set.Green > greenMinimum {
+			greenMinimum = set.Green
+		}
+		if set.Blue > blueMinimum {
+			blueMinimum = set.Blue
+		}
+	}
+
+	power := redMinimum * greenMinimum * blueMinimum
+
+	return power
 }
