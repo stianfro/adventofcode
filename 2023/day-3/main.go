@@ -8,11 +8,11 @@ import (
 	"unicode/utf8"
 )
 
-var symbols = "*&-%+=@#/$"
+// var symbols = "*&-%+=@#/$"
+var symbols = "*"
 
 func main() {
 	var allLines [][]string
-	var partNumbers []string
 
 	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n")
@@ -27,9 +27,14 @@ func main() {
 		allLines = append(allLines, lineSlice)
 	}
 
+	var sumRatios int
+
 	for a, line := range allLines {
 		for b, char := range line {
 			if strings.ContainsAny(char, symbols) {
+				var partNumbers []string
+				var partCount int
+
 				// left
 				if ok, _ := regexp.MatchString(`\d`, line[b-1]); ok {
 					var numberToAdd string
@@ -43,6 +48,7 @@ func main() {
 						}
 					}
 					partNumbers = append(partNumbers, reverse(numberToAdd))
+					partCount += 1
 				}
 				// right
 				if ok, _ := regexp.MatchString(`\d`, line[b+1]); ok {
@@ -57,6 +63,7 @@ func main() {
 						}
 					}
 					partNumbers = append(partNumbers, numberToAdd)
+					partCount += 1
 				}
 
 				// up
@@ -75,6 +82,7 @@ func main() {
 								}
 							}
 							partNumbers = append(partNumbers, reverse(numberToAdd))
+							partCount += 1
 						}
 					}
 					// up middle
@@ -99,8 +107,8 @@ func main() {
 								numberToAdd = allLines[a-1][b] + allLines[a-1][b+1] + allLines[a-1][b+2]
 							}
 						}
-
 						partNumbers = append(partNumbers, numberToAdd)
+						partCount += 1
 					}
 					// up right
 					if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b+1]); ok {
@@ -116,6 +124,7 @@ func main() {
 								}
 							}
 							partNumbers = append(partNumbers, numberToAdd)
+							partCount += 1
 						}
 					}
 				}
@@ -136,6 +145,7 @@ func main() {
 								}
 							}
 							partNumbers = append(partNumbers, reverse(numberToAdd))
+							partCount += 1
 						}
 					}
 					// down middle
@@ -162,6 +172,7 @@ func main() {
 						}
 
 						partNumbers = append(partNumbers, numberToAdd)
+						partCount += 1
 					}
 					// down right
 					if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); ok {
@@ -177,23 +188,22 @@ func main() {
 								}
 							}
 							partNumbers = append(partNumbers, numberToAdd)
+							partCount += 1
 						}
 					}
+				}
+
+				if partCount == 2 {
+					partA, _ := strconv.Atoi(partNumbers[0])
+					partB, _ := strconv.Atoi(partNumbers[1])
+					ratio := partA * partB
+					sumRatios += ratio
 				}
 			}
 		}
 	}
 
-	var answer int
-
-	for _, n := range partNumbers {
-		println(n)
-
-		number, _ := strconv.Atoi(n)
-		answer += number
-	}
-
-	println(answer)
+	println(sumRatios)
 }
 
 func reverse(s string) string {
