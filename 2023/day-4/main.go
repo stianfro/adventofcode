@@ -34,6 +34,10 @@ func main() {
 		allCards = append(allCards, card)
 	}
 
+	PartOne(allCards)
+}
+
+func PartOne(allCards []Card) {
 	var totalPoints int
 
 	for _, card := range allCards {
