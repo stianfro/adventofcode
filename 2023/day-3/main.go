@@ -14,7 +14,7 @@ func main() {
 	var allLines [][]string
 	var partNumbers []string
 
-	input, _ := os.ReadFile("input-test.txt")
+	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n")
 
 	for _, line := range data {
@@ -77,21 +77,6 @@ func main() {
 							partNumbers = append(partNumbers, reverse(numberToAdd))
 						}
 					}
-					// up middle left
-					if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b]); ok {
-						if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b+1]); !ok {
-							var numberToAdd string
-
-							if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b-1]); ok {
-								numberToAdd += allLines[a-1][b]
-								numberToAdd += allLines[a-1][b-1]
-								if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b-2]); ok {
-									numberToAdd += allLines[a-1][b-2]
-								}
-								partNumbers = append(partNumbers, reverse(numberToAdd))
-							}
-						}
-					}
 					// up middle
 					if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b]); ok {
 						var numberToAdd string
@@ -116,21 +101,6 @@ func main() {
 						}
 
 						partNumbers = append(partNumbers, numberToAdd)
-					}
-					// up middle right
-					if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b]); ok {
-						if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b-1]); !ok {
-							var numberToAdd string
-
-							if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b+1]); ok {
-								numberToAdd += allLines[a-1][b]
-								numberToAdd += allLines[a-1][b+1]
-								if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b+2]); ok {
-									numberToAdd += allLines[a-1][b+2]
-								}
-								partNumbers = append(partNumbers, numberToAdd)
-							}
-						}
 					}
 					// up right
 					if ok, _ := regexp.MatchString(`\d`, allLines[a-1][b+1]); ok {
@@ -168,45 +138,30 @@ func main() {
 							partNumbers = append(partNumbers, reverse(numberToAdd))
 						}
 					}
-					// down middle left
-					if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b]); ok {
-						if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); !ok {
-							var numberToAdd string
-
-							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-1]); ok {
-								numberToAdd += allLines[a+1][b]
-								numberToAdd += allLines[a+1][b-1]
-								if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-2]); ok {
-									numberToAdd += allLines[a+1][b-2]
-								}
-								partNumbers = append(partNumbers, reverse(numberToAdd))
-							}
-						}
-					}
 					// down middle
-					// will probably not work for 1, 12, etc
 					if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b]); ok {
+						var numberToAdd string
+						numberToAdd = allLines[a+1][b]
 						if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-1]); ok {
+							numberToAdd = allLines[a+1][b-1] + allLines[a+1][b]
 							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); ok {
-								numberToAdd := allLines[a+1][b-1] + allLines[a+1][b] + allLines[a+1][b+1]
-								partNumbers = append(partNumbers, numberToAdd)
+								numberToAdd = allLines[a+1][b-1] + allLines[a+1][b] + allLines[a+1][b+1]
+							}
+							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-2]); ok {
+								numberToAdd = allLines[a+1][b-2] + allLines[a+1][b-1] + allLines[a+1][b]
 							}
 						}
-					}
-					// down middle right
-					if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b]); ok {
-						if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-1]); !ok {
-							var numberToAdd string
+						if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); ok {
+							numberToAdd = allLines[a+1][b] + allLines[a+1][b+1]
+							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b-1]); ok {
+								numberToAdd = allLines[a+1][b-1] + allLines[a+1][b] + allLines[a+1][b+1]
+							}
+							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+2]); ok {
+								numberToAdd = allLines[a+1][b] + allLines[a+1][b+1] + allLines[a+1][b+2]
+							}
+						}
 
-							if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); ok {
-								numberToAdd += allLines[a+1][b]
-								numberToAdd += allLines[a+1][b+1]
-								if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+2]); ok {
-									numberToAdd += allLines[a+1][b+2]
-								}
-								partNumbers = append(partNumbers, numberToAdd)
-							}
-						}
+						partNumbers = append(partNumbers, numberToAdd)
 					}
 					// down right
 					if ok, _ := regexp.MatchString(`\d`, allLines[a+1][b+1]); ok {
