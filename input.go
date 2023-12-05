@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 )
@@ -15,7 +15,7 @@ func main() {
 	req.Header.Set("Cookie", string(session))
 	res, _ := client.Do(req)
 
-	bodyBytes, _ := ioutil.ReadAll(res.Body)
+	bodyBytes, _ := io.ReadAll(res.Body)
 
 	fmt.Println(string(bodyBytes))
 }
