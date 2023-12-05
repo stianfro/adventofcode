@@ -1,18 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"slices"
 	"strings"
 )
 
 type Card struct {
+	Instances      int
 	WinningNumbers []string
 	NumbersYouHave []string
 }
 
 func main() {
 	var allCards []Card
+	var sumCards int
 
 	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n")
@@ -29,12 +32,31 @@ func main() {
 		card := Card{
 			WinningNumbers: listA,
 			NumbersYouHave: listB,
+			Instances:      1,
 		}
 
 		allCards = append(allCards, card)
 	}
 
-	PartOne(allCards)
+	for n, card := range allCards {
+		for i := 0; i < card.Instances; i++ {
+			var matchingNumbers int
+
+			for _, entry := range card.NumbersYouHave {
+				if slices.Contains(card.WinningNumbers, entry) {
+					matchingNumbers += 1
+				}
+			}
+
+			for i := 0; i < matchingNumbers; i++ {
+				allCards[n+i+1].Instances += 1
+			}
+		}
+		fmt.Println("Card "+fmt.Sprint(n+1), "instances:", card.Instances)
+		sumCards += card.Instances
+	}
+
+	fmt.Println("Answer:", sumCards)
 }
 
 func PartOne(allCards []Card) {
@@ -45,11 +67,9 @@ func PartOne(allCards []Card) {
 		var matchCount int
 
 		for _, entry := range card.NumbersYouHave {
-
 			if slices.Contains(card.WinningNumbers, entry) {
 				matchCount += 1
 			}
-
 		}
 
 		for i := 0; i < matchCount; i++ {
