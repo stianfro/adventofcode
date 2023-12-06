@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -15,6 +16,11 @@ type List struct {
 	DestinationRangeStart int
 	SourceRangeStart      int
 	RangeLength           int
+}
+
+type Number struct {
+	Current []int
+	Next    []int
 }
 
 func main() {
@@ -59,25 +65,52 @@ func main() {
 		allMaps = append(allMaps, m)
 	}
 
-	for index, m := range allMaps {
-		fmt.Println("---")
-		fmt.Println(index, m)
-
-		for _, list := range m.Lists {
-			var sourceRange []int
-			var destRange []int
-
-			for i := 0; i < list.RangeLength; i++ {
-				sourceRange = append(sourceRange, list.SourceRangeStart+i)
-				destRange = append(destRange, list.DestinationRangeStart+i)
-			}
-
-			fmt.Println("src:", sourceRange)
-			fmt.Println("dst:", destRange)
-			fmt.Println("")
-		}
-
+	x := Number{
+		Current: seeds,
 	}
 
-	println("finished")
+	fmt.Println(x.Current)
+
+	for _, m := range allMaps {
+		x.Next = findNext(m, x.Current)
+		fmt.Println(x.Current, x.Next)
+		x.Current = x.Next
+	}
+
+	sort.Ints(x.Current)
+	fmt.Println(x.Current[0])
+}
+
+func findNext(m Map, currentNumbers []int) []int {
+	var sourceRange []int
+	var destRange []int
+
+	for a := 0; a < len(m.Lists); a++ {
+		fmt.Println(a, "/", len(m.Lists))
+
+		for b := 0; b < m.Lists[a].RangeLength; b++ {
+			sourceRange = append(sourceRange, m.Lists[a].SourceRangeStart+b)
+			destRange = append(destRange, m.Lists[a].DestinationRangeStart+b)
+		}
+	}
+
+	sourceDestMap := make(map[int]int)
+
+	for i := range sourceRange {
+		sourceDestMap[sourceRange[i]] = destRange[i]
+	}
+
+	var nextNumbers []int
+
+	for _, s := range currentNumbers {
+		correspondingNumber := sourceDestMap[s]
+
+		if correspondingNumber == 0 {
+			correspondingNumber = s
+		}
+
+		nextNumbers = append(nextNumbers, correspondingNumber)
+	}
+
+	return nextNumbers
 }
