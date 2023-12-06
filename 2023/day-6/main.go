@@ -1,16 +1,7 @@
 package main
 
 func main() {
-	// first := race(7, 9)
-	// second := race(15, 40)
-	// third := race(30, 200)
-	first := race(49, 263)
-	second := race(97, 1532)
-	third := race(94, 1378)
-	fourth := race(94, 1851)
-
-	answer := first * second * third * fourth
-	println(answer)
+	println(race(49979494, 263153213781851))
 }
 
 func race(time, distance int) int {
