@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -10,8 +11,7 @@ func main() {
 	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n\n")
 
-	x, y := data[0], data[1]
-	steps := strings.Split(x, "")
+	steps, y := data[0], data[1]
 	nodes := strings.Split(y, "\n")
 
 	network := make(map[string][]string)
@@ -26,24 +26,73 @@ func main() {
 		network[pos] = strings.Split(targets, ", ")
 	}
 
-	stepCount := 0
-	current := "AAA"
-
-	for current != "ZZZ" {
-		for _, step := range steps {
-			stepCount++
-
-			var direction int
-
-			if step == "L" {
-				direction = 0
-			} else {
-				direction = 1
-			}
-
-			current = network[current][direction]
+	var positions []string
+	for key := range network {
+		if strings.HasSuffix(key, "A") {
+			positions = append(positions, key)
 		}
 	}
 
-	fmt.Println(stepCount)
+	cycles := [][]int{}
+
+	for _, current := range positions {
+		cycle := []int{}
+
+		currentSteps := steps
+		stepCount := 0
+		firstZ := ""
+
+		for true {
+			for stepCount == 0 || !strings.HasSuffix(current, "Z") {
+				stepCount++
+
+				var direction int
+				if string(currentSteps[0]) == "L" {
+					direction = 0
+				} else {
+					direction = 1
+				}
+
+				current = network[current][direction]
+				currentSteps = currentSteps[1:] + string(currentSteps[0])
+			}
+
+			cycle = append(cycle, stepCount)
+
+			if firstZ == "" {
+				firstZ = current
+				stepCount = 0
+			} else if current == firstZ {
+				break
+			}
+		}
+
+		cycles = append(cycles, cycle)
+	}
+
+	var nums []int
+
+	for _, cycle := range cycles {
+		nums = append(nums, cycle[0])
+	}
+
+	sort.Ints(nums)
+
+	lcm := nums[len(nums)-1]
+	nums = nums[:len(nums)-1]
+
+	for _, num := range nums {
+		lcm = lcm * num / gcd(lcm, num)
+	}
+
+	fmt.Println(lcm)
+}
+
+func gcd(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
 }
