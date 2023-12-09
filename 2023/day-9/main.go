@@ -7,17 +7,19 @@ import (
 	"strings"
 )
 
+type History struct {
+	Sequences [][]int
+}
+
 func main() {
-	input, _ := os.ReadFile("input-example.txt")
+	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n")
 
-	for _, line := range data {
-		var sequenceArray [][]int
+	var allHistory []History
 
-		// loop until sumDiffs == 0 ?
-		var history []int
-		var diffs []int
-		var diffsBelow []int
+	for _, line := range data {
+		var history History
+		var seq []int
 
 		if line == "" {
 			continue
@@ -26,70 +28,53 @@ func main() {
 		s := strings.Split(line, " ")
 		for _, v := range s {
 			vI, _ := strconv.Atoi(v)
-			history = append(history, vI)
+			seq = append(seq, vI)
 		}
-		sequenceArray = append(sequenceArray, history)
+		history.Sequences = append(history.Sequences, seq)
 
-		for i := range history {
-			if i == 0 {
-				continue
+		for i := 0; i < len(history.Sequences); i++ {
+			var sumSeq int
+			var diffs []int
+
+			for b := range history.Sequences[i] {
+				if b == 0 {
+					continue
+				}
+				diff := history.Sequences[i][b] - history.Sequences[i][b-1]
+				sumSeq += diff
+				diffs = append(diffs, diff)
 			}
 
-			curr := history[i]
-			prev := history[i-1]
+			history.Sequences = append(history.Sequences, diffs)
 
-			diff := curr - prev
-			diffs = append(diffs, diff)
-		}
-		sequenceArray = append(sequenceArray, diffs)
-
-		for i := range diffs {
-			if i == 0 {
-				continue
+			if sumSeq == 0 {
+				break
 			}
-
-			curr := diffs[i]
-			prev := diffs[i-1]
-
-			diff := curr - prev
-			diffsBelow = append(diffsBelow, diff)
 		}
-		sequenceArray = append(sequenceArray, diffsBelow)
-
-		fmt.Println(history)
-		fmt.Println(diffs)
-		fmt.Println(diffsBelow)
-		fmt.Println("")
-
-		lastHistory := history[len(history)-1]
-		lastDiff := diffs[len(diffs)-1]
-		lastDiffBelow := diffsBelow[len(diffsBelow)-1]
-
-		a := lastDiff + lastDiffBelow
-		b := lastHistory + a
-
-		history = append(history, b)
-		diffs = append(diffs, a)
-		diffsBelow = append(diffsBelow, lastDiffBelow)
-
-		fmt.Println(history)
-		fmt.Println(diffs)
-		fmt.Println(diffsBelow)
-		fmt.Println("")
-
-		var sumDiffsBelow int
-		for _, v := range diffsBelow {
-			sumDiffsBelow += v
-		}
-
-		if sumDiffsBelow == 0 {
-			// next
-			fmt.Println(sequenceArray)
-		} else {
-			// add new sequence to sequencearray
-			fmt.Println("too bad")
-		}
-
-		// os.Exit(0)
+		allHistory = append(allHistory, parseHistory(history))
 	}
+
+	var answer int
+	for _, h := range allHistory {
+		answer += h.Sequences[0][len(h.Sequences[0])-1]
+	}
+	fmt.Println(answer)
+}
+
+func parseHistory(h History) History {
+	seqs := h.Sequences
+	seqs[len(seqs)-1] = append(seqs[len(seqs)-1], 0)
+
+	for i := range seqs {
+		if i == len(seqs)-1 {
+			continue
+		}
+		x := seqs[len(seqs)-(i+1)]
+		y := seqs[len(seqs)-(i+2)]
+		a := x[len(x)-1] + y[len(y)-1]
+
+		seqs[len(seqs)-(i+2)] = append(seqs[len(seqs)-(i+2)], a)
+	}
+
+	return h
 }
