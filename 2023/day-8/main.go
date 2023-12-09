@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	input, _ := os.ReadFile("input-test.txt")
+	input, _ := os.ReadFile("input.txt")
 	data := strings.Split(string(input), "\n\n")
 
 	x, y := data[0], data[1]
@@ -22,9 +22,28 @@ func main() {
 		}
 		s := strings.Split(line, " = ")
 		pos, targets := s[0], s[1]
+		targets = strings.Trim(targets, "()")
 		network[pos] = strings.Split(targets, ", ")
 	}
 
-	fmt.Println(steps)
-	fmt.Println(network)
+	stepCount := 0
+	current := "AAA"
+
+	for current != "ZZZ" {
+		for _, step := range steps {
+			stepCount++
+
+			var direction int
+
+			if step == "L" {
+				direction = 0
+			} else {
+				direction = 1
+			}
+
+			current = network[current][direction]
+		}
+	}
+
+	fmt.Println(stepCount)
 }
