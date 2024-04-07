@@ -56,7 +56,11 @@ func main() {
 
 	var answer int
 	for _, h := range allHistory {
-		answer += h.Sequences[0][len(h.Sequences[0])-1]
+		nextValue := h.Sequences[0][len(h.Sequences[0])-1]
+		if nextValue == -15 {
+			fmt.Println("hello")
+		}
+		answer += nextValue
 	}
 	fmt.Println(answer)
 }
