@@ -1,3 +1,14 @@
+## 0.3.0 (2024-04-08)
+
+### Feat
+
+- **2015**: add grpc method for day-2
+- create grpc server for solutions
+
+### Fix
+
+- **2015**: rename remaining references
+
 ## 0.2.0 (2024-04-07)
 
 ### Feat
