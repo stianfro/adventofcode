@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto.v2015;
+
+option go_package = "./aoc2015";
+
+service SolutionService {
+  rpc Day1(SolutionRequest) returns (SolutionResponse);
+}
+
+message SolutionRequest {
+  string input = 1;
+}
+message SolutionResponse {
+  int64 answerPartOne = 1;
+  int64 answerPartTwo = 2;
+}
