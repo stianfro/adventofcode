@@ -1,3 +1,51 @@
+## 0.2.0 (2024-04-07)
+
+### Feat
+
+- **2015**: complete d2p2
+- **2015**: complete d2p1
+- **2015**: complete day 1
+- **2015**: start day-1
+- **day-9**: wip
+- **day-9**: working example for part 1
+- **day-9**: start part 1, need to refactor
+- **day-5**: complete part 1, hints used
+- **day-8**: complete part 2, hints used
+- **day-8**: complete part 1
+- **day-6**: complete part 2
+- **day-6**: complete part 1
+- **day-5**: works with example data
+- **day-5**: start part 1
+- **day-4**: complete part 2
+- **day-4**: complete part 1
+- **day-3**: start day 1, on a bad course
+- **day-2**: complete part 2
+- **day-2**: complete part 1
+- **day-1**: complete part 2
+- **day-1**: part 1 complete
+- **day-9**: give up day 9
+- **day-9**: give up, using hints from here on
+- **day-9**: draw head to grid correctly
+- **day-9**: well its plotting atleast
+- **day-9**: add plotting library
+- **day-9**: new loop but still off
+- **day-9**: well it does something
+- **day-9**: construct grid from motions
+
+### Fix
+
+- **day-3**: complete part 2, phew
+- **day-3**: complete part 1
+- **day-3**: getting somewhere
+
+### Refactor
+
+- **day-8**: make simplified part 1
+- **day-8**: simplify
+- **day-5**: restart part 1
+- **input**: use io package
+- **day-4**: move part 1 to function
+
 ## 0.1.0 (2022-12-09)
 
 ### Feat
