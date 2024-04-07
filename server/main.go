@@ -17,7 +17,7 @@ type server struct {
 	proto2015.SolutionServiceServer
 }
 
-func (s *server) Day1(ctx context.Context, in *proto2015.SolutionRequest) (*aoc2015.SolutionResponse, error) {
+func (s *server) Day1(ctx context.Context, in *proto2015.SolutionRequest) (*proto2015.SolutionResponse, error) {
 	input := in.Input
 
 	return &proto2015.SolutionResponse{
@@ -26,7 +26,7 @@ func (s *server) Day1(ctx context.Context, in *proto2015.SolutionRequest) (*aoc2
 	}, nil
 }
 
-func (s *server) Day2(ctx context.Context, in *proto2015.SolutionRequest) (*aoc2015.SolutionResponse, error) {
+func (s *server) Day2(ctx context.Context, in *proto2015.SolutionRequest) (*proto2015.SolutionResponse, error) {
 	input := in.Input
 
 	return &proto2015.SolutionResponse{
