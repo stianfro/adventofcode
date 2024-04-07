@@ -1,4 +1,4 @@
-package main
+package day2
 
 import (
 	"log"
@@ -13,18 +13,15 @@ func main() {
 	if err != nil {
 		log.Fatalln("error reading")
 	}
-	data := strings.Split(string(input), "\n")
-	// var data = []string{
-	// 	"2x3x4",
-	// 	"1x1x10",
-	// }
 
-	partOne(data)
-	partTwo(data)
+	PartOne(string(input))
+	PartTwo(string(input))
 }
 
-func partTwo(boxes []string) {
-	var ribbonTotal int
+func PartTwo(input string) int64 {
+	var ribbonTotal int64
+
+	boxes := strings.Split(input, "\n")
 
 	for _, box := range boxes {
 		if len(box) <= 0 {
@@ -44,14 +41,17 @@ func partTwo(boxes []string) {
 		perimeter := 2*lwhSorted[0] + 2*lwhSorted[1]
 
 		ribbon := perimeter + volume
-		ribbonTotal += ribbon
+		ribbonTotal += int64(ribbon)
 	}
 
 	log.Println("p2:", ribbonTotal)
+	return ribbonTotal
 }
 
-func partOne(boxes []string) {
-	var wrappingPaperTotal int
+func PartOne(input string) int64 {
+	var wrappingPaperTotal int64
+
+	boxes := strings.Split(input, "\n")
 
 	for _, box := range boxes {
 		if len(box) <= 0 {
@@ -81,8 +81,9 @@ func partOne(boxes []string) {
 		smallestSide = sides[0]
 
 		wrappingPaper = 2*sideLW + 2*sideWH + 2*sideHL + smallestSide
-		wrappingPaperTotal += wrappingPaper
+		wrappingPaperTotal += int64(wrappingPaper)
 	}
 
 	log.Println("p1:", wrappingPaperTotal)
+	return wrappingPaperTotal
 }
