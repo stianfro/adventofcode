@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	SolutionService_Day1_FullMethodName = "/proto.v2015.SolutionService/Day1"
+	SolutionService_Day2_FullMethodName = "/proto.v2015.SolutionService/Day2"
 )
 
 // SolutionServiceClient is the client API for SolutionService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SolutionServiceClient interface {
 	Day1(ctx context.Context, in *SolutionRequest, opts ...grpc.CallOption) (*SolutionResponse, error)
+	Day2(ctx context.Context, in *SolutionRequest, opts ...grpc.CallOption) (*SolutionResponse, error)
 }
 
 type solutionServiceClient struct {
@@ -46,11 +48,21 @@ func (c *solutionServiceClient) Day1(ctx context.Context, in *SolutionRequest, o
 	return out, nil
 }
 
+func (c *solutionServiceClient) Day2(ctx context.Context, in *SolutionRequest, opts ...grpc.CallOption) (*SolutionResponse, error) {
+	out := new(SolutionResponse)
+	err := c.cc.Invoke(ctx, SolutionService_Day2_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SolutionServiceServer is the server API for SolutionService service.
 // All implementations should embed UnimplementedSolutionServiceServer
 // for forward compatibility
 type SolutionServiceServer interface {
 	Day1(context.Context, *SolutionRequest) (*SolutionResponse, error)
+	Day2(context.Context, *SolutionRequest) (*SolutionResponse, error)
 }
 
 // UnimplementedSolutionServiceServer should be embedded to have forward compatible implementations.
@@ -59,6 +71,9 @@ type UnimplementedSolutionServiceServer struct {
 
 func (UnimplementedSolutionServiceServer) Day1(context.Context, *SolutionRequest) (*SolutionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Day1 not implemented")
+}
+func (UnimplementedSolutionServiceServer) Day2(context.Context, *SolutionRequest) (*SolutionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Day2 not implemented")
 }
 
 // UnsafeSolutionServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -90,6 +105,24 @@ func _SolutionService_Day1_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SolutionService_Day2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SolutionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SolutionServiceServer).Day2(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SolutionService_Day2_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SolutionServiceServer).Day2(ctx, req.(*SolutionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SolutionService_ServiceDesc is the grpc.ServiceDesc for SolutionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +133,10 @@ var SolutionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Day1",
 			Handler:    _SolutionService_Day1_Handler,
+		},
+		{
+			MethodName: "Day2",
+			Handler:    _SolutionService_Day2_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

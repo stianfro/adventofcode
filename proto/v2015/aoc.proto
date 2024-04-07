@@ -6,6 +6,7 @@ option go_package = "./aoc2015";
 
 service SolutionService {
   rpc Day1(SolutionRequest) returns (SolutionResponse);
+  rpc Day2(SolutionRequest) returns (SolutionResponse);
 }
 
 message SolutionRequest {
