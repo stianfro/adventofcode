@@ -1,2 +1,4 @@
 tmp/
 bin/
+target/
+Cargo.lock
