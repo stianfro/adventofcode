@@ -48,19 +48,19 @@ fn part_two(directions: Vec<char>) -> String {
 
 #[test]
 fn test_part_one() {
-    struct Test {
-        input: String,
-        want: String,
+    struct Test<'a> {
+        input: &'a str,
+        want: &'a str,
     }
 
     let tests = vec![
         Test {
-            input: String::from("(())"),
-            want: String::from("0"),
+            input: "(())",
+            want: "0",
         },
         Test {
-            input: String::from("((("),
-            want: String::from("3"),
+            input: "(((",
+            want: "3",
         },
     ];
 
@@ -68,25 +68,25 @@ fn test_part_one() {
         let input_slice = test.input.chars().collect();
         let have = part_one(input_slice);
 
-        assert_eq!(test.want, have,)
+        assert_eq!(test.want, have)
     }
 }
 
 #[test]
 fn test_part_two() {
-    struct Test {
-        input: String,
-        want: String,
+    struct Test<'a> {
+        input: &'a str,
+        want: &'a str,
     }
 
     let tests = vec![
         Test {
-            input: String::from(")"),
-            want: String::from("1"),
+            input: ")",
+            want: "1",
         },
         Test {
-            input: String::from("()())"),
-            want: String::from("5"),
+            input: "()())",
+            want: "5",
         },
     ];
 
@@ -94,6 +94,6 @@ fn test_part_two() {
         let input_slice = test.input.chars().collect();
         let have = part_two(input_slice);
 
-        assert_eq!(test.want, have,)
+        assert_eq!(test.want, have)
     }
 }
