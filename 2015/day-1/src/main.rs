@@ -8,13 +8,13 @@ fn main() -> io::Result<()> {
     let directions = read_input("input.txt")?;
     let directions_slice: Vec<char> = directions.chars().collect();
 
-    part_one(directions_slice.clone());
-    part_two(directions_slice.clone());
+    println!("part one: {}", part_one(directions_slice.clone()));
+    println!("part two: {}", part_two(directions_slice.clone()));
 
     Ok(())
 }
 
-fn part_one(directions: Vec<char>) {
+fn part_one(directions: Vec<char>) -> String {
     let mut current_floor = 0;
 
     for direction in directions {
@@ -25,10 +25,10 @@ fn part_one(directions: Vec<char>) {
         }
     }
 
-    println!("part one: {}", current_floor);
+    format!("{current_floor}")
 }
 
-fn part_two(directions: Vec<char>) {
+fn part_two(directions: Vec<char>) -> String {
     let mut current_floor = 0;
 
     for (index, direction) in directions.iter().enumerate() {
@@ -39,8 +39,61 @@ fn part_two(directions: Vec<char>) {
         }
 
         if current_floor == -1 {
-            println!("part two: {}", index + 1);
-            break;
+            return format!("{}", index + 1);
         }
+    }
+
+    String::from("")
+}
+
+#[test]
+fn test_part_one() {
+    struct Test {
+        input: String,
+        want: String,
+    }
+
+    let tests = vec![
+        Test {
+            input: String::from("(())"),
+            want: String::from("0"),
+        },
+        Test {
+            input: String::from("((("),
+            want: String::from("3"),
+        },
+    ];
+
+    for test in tests {
+        let input_slice = test.input.chars().collect();
+        let have = part_one(input_slice);
+
+        assert_eq!(test.want, have,)
+    }
+}
+
+#[test]
+fn test_part_two() {
+    struct Test {
+        input: String,
+        want: String,
+    }
+
+    let tests = vec![
+        Test {
+            input: String::from(")"),
+            want: String::from("1"),
+        },
+        Test {
+            input: String::from("()())"),
+            want: String::from("5"),
+        },
+    ];
+
+    for test in tests {
+        let input_slice = test.input.chars().collect();
+        let have = part_two(input_slice);
+
+        assert_eq!(test.want, have,)
     }
 }
