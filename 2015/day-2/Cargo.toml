@@ -1,4 +1,7 @@
 [package]
 name = "day-2"
 
+[lints.clippy]
+pedantic = "warn"
+
 [dependencies]
