@@ -1,11 +1,14 @@
 package main
 
 import (
-	"os"
+	_ "embed"
 	"sort"
 	"strconv"
 	"strings"
 )
+
+//go:embed input.txt
+var input string
 
 type Elf struct {
 	Calories []int
@@ -14,11 +17,6 @@ type Elf struct {
 func main() {
 	var elves []Elf
 	var totalCalories []int
-
-	input, err := os.ReadFile("input.txt")
-	if err != nil {
-		println("failed to read input")
-	}
 
 	data := strings.Split(string(input), "\n")
 
