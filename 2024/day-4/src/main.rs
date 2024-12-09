@@ -3,7 +3,8 @@ use std::fs;
 fn main() {
     let input = fs::read_to_string("./input.txt").expect("Should have been able to read the file");
 
-    println!("{}", part1(&input))
+    println!("{}", part1(&input));
+    println!("{}", part2(&input));
 }
 
 fn part1(input: &str) -> i32 {
@@ -113,6 +114,83 @@ fn part1(input: &str) -> i32 {
     xmas
 }
 
+fn part2(input: &str) -> i32 {
+    let lines = input.split("\n").collect::<Vec<_>>();
+
+    let mut xmas = 0;
+
+    for (y, _) in lines.iter().enumerate() {
+        let lv = lines[y].split("").collect::<Vec<_>>();
+
+        for (x, _) in lv.iter().enumerate() {
+            if y + 2 >= lines.len() {
+                continue;
+            }
+
+            if x + 2 >= lv.len() {
+                continue;
+            }
+
+            let lvdown1 = lines[y + 1].split("").collect::<Vec<_>>();
+            let lvdown2 = lines[y + 2].split("").collect::<Vec<_>>();
+
+            // M.S
+            // .A.
+            // M.S
+            if lv[x] == "M"
+                && lv[x + 2] == "S"
+                && lvdown1[x + 1] == "A"
+                && lvdown2[x] == "M"
+                && lvdown2[x + 2] == "S"
+            {
+                xmas += 1;
+                continue;
+            }
+
+            // S.S
+            // .A.
+            // M.M
+            if lv[x] == "S"
+                && lv[x + 2] == "S"
+                && lvdown1[x + 1] == "A"
+                && lvdown2[x] == "M"
+                && lvdown2[x + 2] == "M"
+            {
+                xmas += 1;
+                continue;
+            }
+
+            // M.M
+            // .A.
+            // S.S
+            if lv[x] == "M"
+                && lv[x + 2] == "M"
+                && lvdown1[x + 1] == "A"
+                && lvdown2[x] == "S"
+                && lvdown2[x + 2] == "S"
+            {
+                xmas += 1;
+                continue;
+            }
+
+            // S.M
+            // .A.
+            // S.M
+            if lv[x] == "S"
+                && lv[x + 2] == "M"
+                && lvdown1[x + 1] == "A"
+                && lvdown2[x] == "S"
+                && lvdown2[x + 2] == "M"
+            {
+                xmas += 1;
+                continue;
+            }
+        }
+    }
+
+    xmas
+}
+
 #[test]
 fn test_part1() {
     let input =
@@ -124,4 +202,11 @@ XMAS.S
 .X....";
     assert_eq!(part1(&input), 18);
     assert_eq!(part1(input2), 4)
+}
+
+#[test]
+fn test_part2() {
+    let input =
+        fs::read_to_string("./input-example.txt").expect("Should have been able to read the file");
+    assert_eq!(part2(&input), 9)
 }
