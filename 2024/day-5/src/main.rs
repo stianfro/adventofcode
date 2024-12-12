@@ -1,7 +1,7 @@
-use libs::input;
+use std::fs;
 
 fn main() {
-    let input = input::read("./input-example.txt");
+    let input = fs::read_to_string("./input-example.txt").expect("no error");
 
     let sections = input.split("\n\n").collect::<Vec<_>>();
     // let rules = sections[0].split("\n").collect::<Vec<_>>();
